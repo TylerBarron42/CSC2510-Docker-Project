@@ -1,7 +1,15 @@
 services:
   db:
     container_name: postgres_db
-
+    image: postgres:16
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: idk
+    volumes:
+      - crazy_volume:/var/lib/postgresql/data
     # TODO: 
     # define image (if our container is named postgres_db... i wonder... use 16 as the version.)
     # define ports (postgres default port is 5432)
@@ -27,6 +35,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: idk
+      PORT: 8080
+    ports:
+      - "8080:8080"
     #TODO:
       # define environment variables
       # (DB_HOST (the name of the service our db is in)
@@ -40,3 +57,5 @@ services:
 # TODO: 
 # define a volume at the highest level
 # should be same name as the volume you defined for DB
+volumes:
+  crazy_volume:

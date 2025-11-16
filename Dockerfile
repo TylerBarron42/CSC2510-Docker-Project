@@ -5,10 +5,15 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN go build -o server .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server .
 
 # Step 2: Run
 FROM alpine:3.20
+WORKDIR /app
+COPY --from=builder /app/server .
+RUN chmod +x /app/server
+EXPOSE 8080
+CMD ["./server"]
 # TODO: 
     # set WORKDIR to the /app directory
     # copy our current directory to /app/server (hint - use --from=builder)
